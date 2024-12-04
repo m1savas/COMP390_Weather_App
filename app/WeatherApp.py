@@ -64,6 +64,12 @@ class WeatherApp:
         self.hourly_frame = tk.Frame(self.root, bg="#4b4b4b", bd=5)
         self.hourly_frame.place(relx=0.5, rely=0.55, relwidth=0.9, relheight=0.35, anchor='n')
 
+    #functions to send API keys to tests folder for testing. if there is a better way to do this please tell me. -miah
+    def get_api_key_geolocation(self):
+        return self.GEOCODING_API_KEY
+    def get_api_key_weather(self):
+        return self.WEATHER_API_KEY
+    
     def set_background_image(self, image_path):
         try:
             image = Image.open(image_path)
