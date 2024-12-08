@@ -1,9 +1,9 @@
 #unit tests
 import requests
-#import sys
-#sys.path.insert(1, '/COMP390_Weather_App')
-from app.WeatherApp import WeatherApp #first WeatherApp is file name. second WeatherApp is class name.
-#TODO it can find the right class but now it's mad about the imports in class WeatherApp
+#import sys #tentatively unneeded?
+#sys.path.insert(1, '/COMP390_Weather_App') #tentatively unneeded?
+from app.updated_Weather_App import WeatherApp
+#TODO it can find the right class but now it's mad about the imports in WeatherApp
    
 def api_url_geolocation():
     test_api_url_instance_geolocation = WeatherApp()
