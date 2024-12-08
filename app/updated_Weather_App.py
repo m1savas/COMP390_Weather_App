@@ -91,6 +91,12 @@ class WeatherApp:
         if os.path.exists(self.background_image_path):
             self.set_background_image(self.background_image_path)
 
+    #functions to send API keys to tests folder for testing. if there is a better way to do this please tell me. -miah
+    def get_api_key_geolocation(self):
+        return self.GEOCODING_API_KEY
+    def get_api_key_weather(self):
+        return self.WEATHER_API_KEY
+    
     def set_background_image(self, image_path):
         try:
             image = Image.open(image_path)
