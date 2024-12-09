@@ -91,11 +91,49 @@ class WeatherApp:
         if os.path.exists(self.background_image_path):
             self.set_background_image(self.background_image_path)
 
-    #functions to send API keys to tests folder for testing. if there is a better way to do this please tell me. -miah
+    #functions to send variables to tests folder for testing. if there is a better way to do this please tell me. -Miah
     def get_api_key_geolocation(self):
         return self.GEOCODING_API_KEY
     def get_api_key_weather(self):
         return self.WEATHER_API_KEY
+    
+    def get_gui_geometry(self):
+        return self.root.geometry
+    def get_gui_title(self):
+        return self.root.title
+    
+    def get_background_image_path(self):
+        if os.path.exists(self.background_image_path):
+            return self.background_image_path
+        else:
+            return "Error: no background image path"
+    def get_background_label_dot_image(self):
+        self.get_background_image_path(self)
+        try:
+            self.set_background_image(self, self.background_image_path)
+            return self.background_label.cget("image")
+        except Exception:
+                return "Error: could not set background image"
+    
+    def get_icon_image_path(self):
+        try:
+            if os.path.exists(r"C:\Users\minas\Downloads\icons8-snow-48.png:"): #snow
+                return r"C:\Users\minas\Downloads\icons8-snow-48.png:"
+            else:
+                return "Error: no icon image path"
+        except Exception:
+            return "Error: no icon image path"
+    def get_weather_icon_label_dot_image(self):
+        self.get_icon_image_path(self)
+        try:
+            self.load_weather_icon(self, "snow")
+            return self.weather_icon_label.cget("image")
+        except Exception:
+            return "Error: could not set icon image"
+    
+    def get_temp_label_text(self):
+        return self.label_result.cget("text")
+    #end of functions that send variables to tests folder for testing
     
     def set_background_image(self, image_path):
         try:
@@ -309,65 +347,6 @@ class WeatherApp:
         self.hourly_frame = RoundedFrame(self.root, bg_color="#2b2b2b", corner_radius=20)
         self.hourly_frame.place(relx=0.5, rely=0.55, relwidth=0.9, relheight=0.25, anchor='n')  # Adjusted position
 
-    def load_hourly_forecast(self, hourly_data):
-        for widget in self.hourly_frame.winfo_children():
-            widget.destroy()
-
-        hours_to_display = min(6, len(hourly_data))
-
-        # Container frame for hourly forecasts
-        container = tk.Frame(self.hourly_frame, bg="#2b2b2b")
-        container.place(relx=0.5, rely=0.05, relwidth=0.95, relheight=0.9, anchor='n')  # Adjusted position
-
-        for i in range(hours_to_display):
-            hour_frame = RoundedFrame(container, bg_color="#3b3b3b", corner_radius=10)
-            hour_frame.place(relx=i / hours_to_display, rely=0,
-                             relwidth=1 / hours_to_display - 0.02, relheight=1)
-
-            hour = hourly_data[i]
-
-            # Time label with smaller font
-            if hasattr(hour, 'date'):
-                time_str = hour.date.strftime('%I:%M %p').lstrip('0')
-            else:
-                time_str = 'N/A'
-
-            time_label = tk.Label(
-                hour_frame,
-                text=time_str,
-                font=("Helvetica", 9, "bold"),  # Reduced font size
-                fg="#ffffff",
-                bg="#3b3b3b"
-            )
-            time_label.place(relx=0.5, rely=0.15, anchor='center')
-
-            # Weather icon - smaller size
-            if hasattr(hour, 'summary'):
-                condition = hour.summary.lower()
-                icon_path = self.get_hourly_icon(condition)
-                try:
-                    if os.path.exists(icon_path):
-                        icon_image = Image.open(icon_path)
-                        icon_image = icon_image.resize((25, 25), Image.LANCZOS)  # Reduced icon size
-                        icon_photo = ImageTk.PhotoImage(icon_image)
-                        icon_label = tk.Label(hour_frame, image=icon_photo, bg="#3b3b3b")
-                        icon_label.image = icon_photo
-                        icon_label.place(relx=0.5, rely=0.5, anchor='center')
-                except Exception as e:
-                    logging.error(f"Error loading hourly icon: {str(e)}")
-
-            # Temperature with smaller font
-            temp_c = getattr(hour, 'temperature', 'N/A')
-            temp_f = round((temp_c * 9 / 5) + 32, 1) if temp_c != 'N/A' else 'N/A'
-            temp_label = tk.Label(
-                hour_frame,
-                text=f"{temp_f}°F",
-                font=("Helvetica", 10, "bold"),  # Reduced font size
-                fg="#ffffff",
-                bg="#3b3b3b"
-            )
-            temp_label.place(relx=0.5, rely=0.85, anchor='center')
-
     def animate_search(self):
         if not self.loading:
             self.loading = True
@@ -396,7 +375,7 @@ class WeatherApp:
             self.loading = False
             self.search_button.configure(state='normal')
 
-    def load_hourly_forecast(self, hourly_data):
+    def load_hourly_forecast(self, hourly_data): #this is the new version of the method, I am assuming -Miah
         for widget in self.hourly_frame.winfo_children():
             widget.destroy()
 
