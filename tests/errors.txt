@@ -1,0 +1,31 @@
+Note: unit tests are returning the same errors, not failures, errors.
+
+ERROR tests/test_unit_api.py::test_get_request_geolocation_city - _tkinter.TclError: Can't find a usable init.tcl in the following directories: 
+ERROR tests/test_unit_api.py::test_coordinates_from_data - _tkinter.TclError: Can't find a usable init.tcl in the following directories: 
+ERROR tests/test_unit_api.py::test_weather_from_coordinates_temp - _tkinter.TclError: Can't find a usable init.tcl in the following directories: 
+ERROR tests/test_unit_api.py::test_weather_from_coordinates_condition - _tkinter.TclError: Can't find a usable init.tcl in the following directories: 
+ERROR tests/test_unit_api.py::test_weather_from_coordinates_humidity - _tkinter.TclError: Can't find a usable init.tcl in the following directories: 
+ERROR tests/test_unit_api.py::test_weather_from_coordinates_wind - _tkinter.TclError: Can't find a usable init.tcl in the following directories: 
+ERROR tests/test_unit_gui.py::test_window_size - _tkinter.TclError: Can't find a usable init.tcl in the following directories: 
+ERROR tests/test_unit_gui.py::test_window_title - _tkinter.TclError: Can't find a usable init.tcl in the following directories: 
+ERROR tests/test_unit_gui.py::test_background_from_image - _tkinter.TclError: Can't find a usable init.tcl in the following directories: 
+ERROR tests/test_unit_gui.py::test_icon_from_image - _tkinter.TclError: Can't find a usable init.tcl in the following directories: 
+ERROR tests/test_unit_gui.py::test_updating_forecast - _tkinter.TclError: Can't find a usable init.tcl in the following directories: 
+
+Welp, it is not working out trying to fill in the root in WeatherApp(root) for the unit tests, and mocking didn't work. If this is a folder issue I do not know what the problem is. -Miah
+
+est_test_conn = <sqlite3.Connection object at 0x103647f10>
+delete_database_file = None
+
+    def test_save_weather(est_test_conn, delete_database_file): #True
+        try:
+            test_cursor = est_test_conn.cursor()
+>           test_cursor.execute('''CREATE TABLE IF NOT EXISTS weather
+                                (city TEXT, temperature TEXT, condition TEXT, humidity TEXT, wind_speed TEXT)''')
+E                               sqlite3.OperationalError: disk I/O error
+
+tests/test_unit_database.py:31: OperationalError
+
+This is a failure but only because I made it fail on error. I don't know why it's erroring. -Miah
+
+
