@@ -10,13 +10,13 @@ import tkinter as tk
 @pytest.fixture
 def app():
     root = tk.Tk()
-    test_app = WeatherApp(root)
-    return test_app
+    return root
     
 @pytest.fixture
 def london_forecast_api(app):
+    
     try:
-        forecast = app.meteosource.get_point_forecast(
+        forecast = WeatherApp(app).meteosource.get_point_forecast(
         lat=51.5074456, #london
         lon=-0.1277653, #london
         sections=[sections.CURRENT, sections.HOURLY],
@@ -29,7 +29,7 @@ def london_forecast_api(app):
 
 @pytest.fixture
 def london_response_dot_json(app):
-    test_london_json_api_key = app.get_api_key_geolocation()
+    test_london_json_api_key = WeatherApp(app).get_api_key_geolocation()
     city = "london"
     url = f"https://api.opencagedata.com/geocode/v1/json?q={city}&key={test_london_json_api_key}"
     response = requests.get(url)
@@ -38,7 +38,7 @@ def london_response_dot_json(app):
 
 #test methods
 def test_get_request_geolocation_city(app): #True
-    test_geocoding_api_key = app.get_api_key_geolocation()
+    test_geocoding_api_key = WeatherApp(app).get_api_key_geolocation()
     city = "london"
     url = f"https://api.opencagedata.com/geocode/v1/json?q={city}&key={test_geocoding_api_key}"
     response = requests.get(url)

@@ -10,13 +10,12 @@ import tkinter as tk
 @pytest.fixture
 def app():
     root = tk.Tk()
-    test_app = WeatherApp(root)
-    return test_app
+    return root
 
 @pytest.fixture
 def london_forecast_gui(app):
     try:
-        forecast = app.meteosource.get_point_forecast(
+        forecast = WeatherApp(app).meteosource.get_point_forecast(
         lat=51.5074456, #london
         lon=-0.1277653, #london
         sections=[sections.CURRENT, sections.HOURLY],
@@ -30,7 +29,7 @@ def london_forecast_gui(app):
 @pytest.fixture
 def boston_forecast_gui(app):
     try:
-        forecast = app.meteosource.get_point_forecast(
+        forecast = WeatherApp(app).meteosource.get_point_forecast(
         lat=42.3554334, #boston
         lon=-71.060511, #boston
         sections=[sections.CURRENT, sections.HOURLY],
@@ -61,7 +60,7 @@ def get_icon_image_helper(icon_image_path):
         yield "Error: no icon image at icon image path"
 
 def get_background_path(app):
-    path = app.get_background_image_path()
+    path = WeatherApp(app).get_background_image_path()
     if path == "Error: no background image path":
         yield None
     else:
@@ -79,7 +78,7 @@ def get_background_image():
         yield None
     
 def get_icon_path(app):
-    path = app.get_icon_image_path()
+    path = WeatherApp(app).get_icon_image_path()
     if path == "Error: no icon image path":
         yield None
     else:
@@ -98,10 +97,10 @@ def get_icon_image():
 
 #tests
 def test_window_size(app): #True
-    assert app.get_gui_geometry == "400x600"
+    assert WeatherApp(app).get_gui_geometry == "400x600"
 
 def test_window_title(app): #True
-    assert app.get_gui_title == "Weather App"
+    assert WeatherApp(app).get_gui_title == "Weather App"
 
 def test_background_path_exists(): #True
     path = get_background_path
@@ -120,7 +119,7 @@ def test_background_image(): #True
 def test_background_from_image(app): #True
     image = get_background_image
     try:
-        image_background = app.get_background_label_dot_image()
+        image_background = WeatherApp(app).get_background_label_dot_image()
         if image_background == "Error: could not set background image":
             assert False
         else:
@@ -145,7 +144,7 @@ def test_icon_image(): #True
 def test_icon_from_image(app): #True
     image = get_icon_image
     try:
-        image_icon = app.get_weather_icon_label_dot_image()
+        image_icon = WeatherApp(app).get_weather_icon_label_dot_image()
         if image_icon == "Error: could not set icon image":
             assert False
         else:
@@ -154,14 +153,15 @@ def test_icon_from_image(app): #True
         assert False
  
 def test_updating_forecast(app): #True
+    window = WeatherApp(app)
     try:
-        app.load_hourly_forecast(london_forecast_gui)
+        window.load_hourly_forecast(london_forecast_gui)
         #what temperature was uploaded for london
-        first_temp = app.get_temp_label_text
+        first_temp = window.get_temp_label_text
         
-        app.load_hourly_forecast(boston_forecast_gui)
+        window.load_hourly_forecast(boston_forecast_gui)
         #what temperature was uploaded for boston
-        second_temp = app.get_temp_label_text
+        second_temp = window.get_temp_label_text
         
         #assuming that if the temperatures are the same then it didn't update
         assert first_temp != second_temp
